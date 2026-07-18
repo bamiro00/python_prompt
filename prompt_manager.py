@@ -63,6 +63,64 @@ prompts = [
     },
 ]
 
+def get_required_input(label):
+    """빈값이 아닌 입력을 받을 때까지 반복한다."""
+    while True:
+        value = input(f"{label}: ").strip()
+
+        if value:
+            return value
+
+        print("입력값을 비워둘 수 없습니다. 다시 입력해 주세요.")
+
+
+def select_category(categories):
+    """카테고리 목록을 출력하고 선택한 카테고리를 반환한다."""
+    print("\n카테고리 선택")
+
+    for number, category in enumerate(categories, start=1):
+        print(f"{number}. {category}")
+
+    while True:
+        choice = input("카테고리 번호: ").strip()
+
+        if choice.isdigit():
+            index = int(choice) - 1
+
+            if 0 <= index < len(categories):
+                return categories[index]
+
+        print("올바른 카테고리 번호를 입력해 주세요.")
+
+
+def get_next_id(prompt_list):
+    """새 프롬프트에 사용할 다음 번호를 반환한다."""
+    if not prompt_list:
+        return 1
+
+    return max(prompt["id"] for prompt in prompt_list) + 1
+
+
+def add_prompt(prompt_list, categories):
+    """새로운 프롬프트를 입력받아 목록에 추가한다."""
+    print("\n=== 프롬프트 추가 ===")
+
+    title = get_required_input("제목")
+    content = get_required_input("내용")
+    category = select_category(categories)
+
+    new_prompt = {
+        "id": get_next_id(prompt_list),
+        "title": title,
+        "content": content,
+        "category": category,
+        "favorite": False,
+    }
+
+    prompt_list.append(new_prompt)
+
+    print("\n프롬프트가 추가되었습니다.")
+    print(f"등록 번호: {new_prompt['id']}")
 
 def show_menu():
     """프로그램의 메인 메뉴를 출력한다."""
@@ -83,11 +141,13 @@ def main():
         show_menu()
         choice = input("선택: ").strip()
 
-        if choice == "0":
+        if choice == "1":
+            add_prompt(prompts, CATEGORIES)
+        elif choice in {"2", "3", "4", "5", "6", "7"}:
+            print("해당 기능은 다음 단계에서 구현합니다.")
+        elif choice == "0":
             print("프로그램을 종료합니다.")
             break
-        elif choice in {"1", "2", "3", "4", "5", "6", "7"}:
-            print("해당 기능은 다음 단계에서 구현합니다.")
         else:
             print("올바른 메뉴 번호를 입력해 주세요.")
 
