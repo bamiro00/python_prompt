@@ -194,6 +194,42 @@ def search_prompt(prompt_list):
             f"[{prompt['category']}] "
             f"{prompt['title']}{favorite_mark}"
         )
+def find_prompt_by_id(prompt_list, prompt_id):
+    """입력한 번호와 일치하는 프롬프트를 반환한다."""
+    for prompt in prompt_list:
+        if prompt["id"] == prompt_id:
+            return prompt
+
+    return None
+
+
+def show_detail(prompt_list):
+    """선택한 프롬프트의 전체 정보를 출력한다."""
+    print("\n=== 프롬프트 상세 보기 ===")
+
+    prompt_id_text = get_required_input("프롬프트 번호")
+
+    if not prompt_id_text.isdigit():
+        print("프롬프트 번호는 숫자로 입력해 주세요.")
+        return
+
+    prompt_id = int(prompt_id_text)
+    selected_prompt = find_prompt_by_id(prompt_list, prompt_id)
+
+    if selected_prompt is None:
+        print("해당 번호의 프롬프트가 없습니다.")
+        return
+
+    favorite_text = "예 ⭐" if selected_prompt["favorite"] else "아니오"
+
+    print("\n" + "-" * 40)
+    print(f"번호: {selected_prompt['id']}")
+    print(f"제목: {selected_prompt['title']}")
+    print(f"카테고리: {selected_prompt['category']}")
+    print(f"즐겨찾기: {favorite_text}")
+    print("내용:")
+    print(selected_prompt["content"])
+    print("-" * 40)
 def show_menu():
     """프로그램의 메인 메뉴를 출력한다."""
     print("\n=== 반려동물 추억 콘텐츠 프롬프트 관리 ===")
@@ -221,7 +257,9 @@ def main():
             show_by_category(prompts, CATEGORIES)
         elif choice == "4":
             search_prompt(prompts)
-        elif choice in {"5", "6", "7"}:
+        elif choice == "5":
+            show_detail(prompts)
+        elif choice in {"6", "7"}:
             print("해당 기능은 다음 단계에서 구현합니다.")
         elif choice == "0":
             print("프로그램을 종료합니다.")
