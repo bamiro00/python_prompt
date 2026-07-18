@@ -390,6 +390,105 @@ def export_prompts_to_markdown(prompt_list, categories):
 
     print(f"\n총 {exported_count}개의 Markdown 파일을 생성했습니다.")
 
+def update_prompt(prompt_list, categories):
+    """선택한 프롬프트의 제목, 내용, 카테고리를 수정한다."""
+    print("\n=== 프롬프트 수정 ===")
+
+    prompt_id_text = get_required_input("수정할 프롬프트 번호")
+
+    if not prompt_id_text.isdigit():
+        print("프롬프트 번호는 숫자로 입력해 주세요.")
+        return
+
+    prompt_id = int(prompt_id_text)
+    selected_prompt = find_prompt_by_id(prompt_list, prompt_id)
+
+    if selected_prompt is None:
+        print("해당 번호의 프롬프트가 없습니다.")
+        return
+
+    print("\n현재 프롬프트 정보")
+    print(f"제목: {selected_prompt['title']}")
+    print(f"내용: {selected_prompt['content']}")
+    print(f"카테고리: {selected_prompt['category']}")
+    print("\n변경하지 않을 항목은 Enter만 누르세요.")
+
+    new_title = input("새 제목: ").strip()
+    new_content = input("새 내용: ").strip()
+
+    print("\n새 카테고리 선택")
+    print("0. 기존 카테고리 유지")
+
+    for number, category in enumerate(categories, start=1):
+        print(f"{number}. {category}")
+
+    while True:
+        category_choice = input("카테고리 번호: ").strip()
+
+        if category_choice == "0":
+            new_category = selected_prompt["category"]
+            break
+
+        if category_choice.isdigit():
+            category_index = int(category_choice) - 1
+
+            if 0 <= category_index < len(categories):
+                new_category = categories[category_index]
+                break
+
+        print("올바른 카테고리 번호를 입력해 주세요.")
+
+    changed = False
+
+    if new_title and new_title != selected_prompt["title"]:
+        selected_prompt["title"] = new_title
+        changed = True
+
+    if new_content and new_content != selected_prompt["content"]:
+        selected_prompt["content"] = new_content
+        changed = True
+
+    if new_category != selected_prompt["category"]:
+        selected_prompt["category"] = new_category
+        changed = True
+
+    if not changed:
+        print("변경된 내용이 없습니다.")
+        return
+
+    save_prompts(prompt_list)
+    print("프롬프트를 수정했습니다.")
+
+def delete_prompt(prompt_list):
+    """선택한 프롬프트를 확인 후 삭제한다."""
+    print("\n=== 프롬프트 삭제 ===")
+
+    prompt_id_text = get_required_input("삭제할 프롬프트 번호")
+
+    if not prompt_id_text.isdigit():
+        print("프롬프트 번호는 숫자로 입력해 주세요.")
+        return
+
+    prompt_id = int(prompt_id_text)
+    selected_prompt = find_prompt_by_id(prompt_list, prompt_id)
+
+    if selected_prompt is None:
+        print("해당 번호의 프롬프트가 없습니다.")
+        return
+
+    print(f"\n삭제 대상: {selected_prompt['title']}")
+
+    confirm = input("정말 삭제하시겠습니까? (y/n): ").strip().lower()
+
+    if confirm != "y":
+        print("삭제를 취소했습니다.")
+        return
+
+    prompt_list.remove(selected_prompt)
+    save_prompts(prompt_list)
+
+    print("프롬프트를 삭제했습니다.")
+
 def show_menu():
     """프로그램의 메인 메뉴를 출력한다."""
     print("\n=== 반려동물 추억 콘텐츠 프롬프트 관리 ===")
@@ -401,6 +500,8 @@ def show_menu():
     print("6. 즐겨찾기 관리")
     print("7. 즐겨찾기 목록")
     print("8. 카테고리별 Markdown 내보내기")
+    print("9. 프롬프트 수정")
+    print("10. 프롬프트 삭제")
     print("0. 종료")
 
 
@@ -428,6 +529,10 @@ def main():
             show_favorites(prompts)
         elif choice == "8":
             export_prompts_to_markdown(prompts, CATEGORIES)
+        elif choice == "9":
+            update_prompt(prompts, CATEGORIES)
+        elif choice == "10":
+            delete_prompt(prompts)
         elif choice == "0":
             print("프로그램을 종료합니다.")
             break
