@@ -87,6 +87,9 @@ def save_prompts(prompt_list):
 def load_prompts(prompt_list):
     """JSON 파일이 있으면 저장된 프롬프트를 불러온다."""
     if not DATA_FILE.exists():
+        for prompt in prompt_list:
+            prompt.setdefault("views", 0)
+
         save_prompts(prompt_list)
         return
 
@@ -100,6 +103,10 @@ def load_prompts(prompt_list):
 
         prompt_list.clear()
         prompt_list.extend(saved_prompts)
+        for prompt in prompt_list:
+            prompt.setdefault("views", 0)
+
+        save_prompts(prompt_list)
 
     except (OSError, json.JSONDecodeError) as error:
         print(f"데이터 불러오기 중 오류가 발생했습니다: {error}")
@@ -157,6 +164,7 @@ def add_prompt(prompt_list, categories):
         "content": content,
         "category": category,
         "favorite": False,
+        "views": 0,
     }
 
     prompt_list.append(new_prompt)
@@ -267,6 +275,9 @@ def show_detail(prompt_list):
     if selected_prompt is None:
         print("해당 번호의 프롬프트가 없습니다.")
         return
+    
+    selected_prompt["views"] = selected_prompt.get("views", 0) + 1
+    save_prompts(prompt_list)
 
     favorite_text = "예 ⭐" if selected_prompt["favorite"] else "아니오"
 
@@ -275,6 +286,7 @@ def show_detail(prompt_list):
     print(f"제목: {selected_prompt['title']}")
     print(f"카테고리: {selected_prompt['category']}")
     print(f"즐겨찾기: {favorite_text}")
+    print(f"조회수: {selected_prompt['views']}회")
     print("내용:")
     print(selected_prompt["content"])
     print("-" * 40)
