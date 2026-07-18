@@ -260,6 +260,29 @@ def toggle_favorite(prompt_list):
     else:
         print(f"'{selected_prompt['title']}'을 즐겨찾기에서 해제했습니다.")
 
+def show_favorites(prompt_list):
+    """즐겨찾기로 설정된 프롬프트만 출력한다."""
+    print("\n=== 즐겨찾기 목록 ===")
+
+    favorite_prompts = [
+        prompt
+        for prompt in prompt_list
+        if prompt["favorite"]
+    ]
+
+    if not favorite_prompts:
+        print("즐겨찾기된 프롬프트가 없습니다.")
+        return
+
+    for prompt in favorite_prompts:
+        print(
+            f"{prompt['id']}. "
+            f"[{prompt['category']}] "
+            f"{prompt['title']} ⭐"
+        )
+
+    print(f"\n총 {len(favorite_prompts)}개의 즐겨찾기")
+
 def show_menu():
     """프로그램의 메인 메뉴를 출력한다."""
     print("\n=== 반려동물 추억 콘텐츠 프롬프트 관리 ===")
@@ -292,7 +315,7 @@ def main():
         elif choice == "6":
             toggle_favorite(prompts)
         elif choice == "7":
-            print("해당 기능은 다음 단계에서 구현합니다.")
+            show_favorites(prompts)
         elif choice == "0":
             print("프로그램을 종료합니다.")
             break
