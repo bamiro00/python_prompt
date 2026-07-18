@@ -3,6 +3,7 @@ from pathlib import Path
 
 
 DATA_FILE = Path("prompts.json")
+EXPORT_DIR = Path("exports")
 
 # 프롬프트에서 사용할 카테고리 목록
 CATEGORIES = [
@@ -326,6 +327,69 @@ def show_favorites(prompt_list):
 
     print(f"\n총 {len(favorite_prompts)}개의 즐겨찾기")
 
+def export_prompts_to_markdown(prompt_list, categories):
+    """전체 프롬프트를 카테고리별 Markdown 파일로 내보낸다."""
+    print("\n=== 카테고리별 Markdown 내보내기 ===")
+
+    EXPORT_DIR.mkdir(exist_ok=True)
+    exported_count = 0
+
+    for category in categories:
+        category_prompts = [
+            prompt
+            for prompt in prompt_list
+            if prompt["category"] == category
+        ]
+
+        if not category_prompts:
+            continue
+
+        file_name = f"{category.replace(' ', '_')}.md"
+        file_path = EXPORT_DIR / file_name
+
+        markdown_lines = [
+            f"# {category} 프롬프트",
+            "",
+            f"총 {len(category_prompts)}개의 프롬프트",
+            "",
+        ]
+
+        for prompt in category_prompts:
+            favorite_mark = " ⭐" if prompt["favorite"] else ""
+            favorite_text = "예" if prompt["favorite"] else "아니오"
+
+            markdown_lines.extend(
+                [
+                    f"## {prompt['id']}. {prompt['title']}{favorite_mark}",
+                    "",
+                    f"- 카테고리: {prompt['category']}",
+                    f"- 즐겨찾기: {favorite_text}",
+                    "",
+                    prompt["content"],
+                    "",
+                    "---",
+                    "",
+                ]
+            )
+
+        try:
+            file_path.write_text(
+                "\n".join(markdown_lines),
+                encoding="utf-8",
+            )
+        except OSError as error:
+            print(f"'{file_name}' 저장 중 오류가 발생했습니다: {error}")
+            continue
+
+        print(f"- {file_path}")
+        exported_count += 1
+
+    if exported_count == 0:
+        print("내보낼 프롬프트가 없습니다.")
+        return
+
+    print(f"\n총 {exported_count}개의 Markdown 파일을 생성했습니다.")
+
 def show_menu():
     """프로그램의 메인 메뉴를 출력한다."""
     print("\n=== 반려동물 추억 콘텐츠 프롬프트 관리 ===")
@@ -336,13 +400,14 @@ def show_menu():
     print("5. 프롬프트 상세 보기")
     print("6. 즐겨찾기 관리")
     print("7. 즐겨찾기 목록")
+    print("8. 카테고리별 Markdown 내보내기")
     print("0. 종료")
 
 
 def main():
     """사용자의 메뉴 선택을 반복해서 처리한다."""
     load_prompts(prompts)
-    
+
     while True:
         show_menu()
         choice = input("선택: ").strip()
@@ -361,6 +426,8 @@ def main():
             toggle_favorite(prompts)
         elif choice == "7":
             show_favorites(prompts)
+        elif choice == "8":
+            export_prompts_to_markdown(prompts, CATEGORIES)
         elif choice == "0":
             print("프로그램을 종료합니다.")
             break
