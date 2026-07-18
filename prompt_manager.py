@@ -139,7 +139,33 @@ def show_list(prompt_list):
         )
 
     print(f"\n총 {len(prompt_list)}개의 프롬프트")
+def show_by_category(prompt_list, categories):
+    """선택한 카테고리에 속한 프롬프트만 출력한다."""
+    print("\n=== 카테고리별 조회 ===")
 
+    selected_category = select_category(categories)
+
+    filtered_prompts = [
+        prompt
+        for prompt in prompt_list
+        if prompt["category"] == selected_category
+    ]
+
+    print(f"\n[{selected_category}] 카테고리 프롬프트")
+
+    if not filtered_prompts:
+        print("해당 카테고리에 등록된 프롬프트가 없습니다.")
+        return
+
+    for prompt in filtered_prompts:
+        favorite_mark = " ⭐" if prompt["favorite"] else ""
+
+        print(
+            f"{prompt['id']}. "
+            f"{prompt['title']}{favorite_mark}"
+        )
+
+    print(f"\n총 {len(filtered_prompts)}개의 프롬프트")
 def show_menu():
     """프로그램의 메인 메뉴를 출력한다."""
     print("\n=== 반려동물 추억 콘텐츠 프롬프트 관리 ===")
@@ -163,7 +189,9 @@ def main():
             add_prompt(prompts, CATEGORIES)
         elif choice == "2":
             show_list(prompts)
-        elif choice in {"3", "4", "5", "6", "7"}:
+        elif choice == "3":
+            show_by_category(prompts, CATEGORIES)
+        elif choice in {"4", "5", "6", "7"}:
             print("해당 기능은 다음 단계에서 구현합니다.")
         elif choice == "0":
             print("프로그램을 종료합니다.")
