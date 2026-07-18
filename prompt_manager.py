@@ -1,3 +1,9 @@
+import json
+from pathlib import Path
+
+
+DATA_FILE = Path("prompts.json")
+
 # 프롬프트에서 사용할 카테고리 목록
 CATEGORIES = [
     "텍스트 생성",
@@ -63,6 +69,41 @@ prompts = [
     },
 ]
 
+def save_prompts(prompt_list):
+    """프롬프트 데이터를 JSON 파일로 저장한다."""
+    try:
+        with DATA_FILE.open("w", encoding="utf-8") as file:
+            json.dump(
+                prompt_list,
+                file,
+                ensure_ascii=False,
+                indent=2,
+            )
+    except OSError as error:
+        print(f"데이터 저장 중 오류가 발생했습니다: {error}")
+
+
+def load_prompts(prompt_list):
+    """JSON 파일이 있으면 저장된 프롬프트를 불러온다."""
+    if not DATA_FILE.exists():
+        save_prompts(prompt_list)
+        return
+
+    try:
+        with DATA_FILE.open("r", encoding="utf-8") as file:
+            saved_prompts = json.load(file)
+
+        if not isinstance(saved_prompts, list):
+            print("저장 파일 형식이 올바르지 않아 기본 데이터로 시작합니다.")
+            return
+
+        prompt_list.clear()
+        prompt_list.extend(saved_prompts)
+
+    except (OSError, json.JSONDecodeError) as error:
+        print(f"데이터 불러오기 중 오류가 발생했습니다: {error}")
+        print("기본 데이터로 시작합니다.")
+
 def get_required_input(label):
     """빈값이 아닌 입력을 받을 때까지 반복한다."""
     while True:
@@ -118,6 +159,7 @@ def add_prompt(prompt_list, categories):
     }
 
     prompt_list.append(new_prompt)
+    save_prompts(prompt_list)
 
     print("\n프롬프트가 추가되었습니다.")
     print(f"등록 번호: {new_prompt['id']}")
@@ -254,6 +296,7 @@ def toggle_favorite(prompt_list):
         return
 
     selected_prompt["favorite"] = not selected_prompt["favorite"]
+    save_prompts(prompt_list)
 
     if selected_prompt["favorite"]:
         print(f"'{selected_prompt['title']}'을 즐겨찾기에 추가했습니다.")
@@ -298,6 +341,8 @@ def show_menu():
 
 def main():
     """사용자의 메뉴 선택을 반복해서 처리한다."""
+    load_prompts(prompts)
+    
     while True:
         show_menu()
         choice = input("선택: ").strip()
