@@ -12,6 +12,18 @@ Python의 리스트와 딕셔너리, 조건문, 반복문, 함수, 파일 입출
 - GitHub
 - 외부 라이브러리 사용 없음
 
+<details>
+<summary>개발 환경 설정 화면 보기</summary>
+
+<br>
+
+Python 버전, Git 버전, Git 사용자 정보와 기본 브랜치 설정을 확인한 화면이다.
+
+![개발 환경 설정](docs/screenshots/01_개발환경_VSCode_Python_Git.png)
+
+</details>
+
+
 ## 주요 기능
 
 1. 프롬프트 추가
@@ -26,6 +38,48 @@ Python의 리스트와 딕셔너리, 조건문, 반복문, 함수, 파일 입출
 10. 프롬프트 삭제
 11. 조회수 기준 Top 프롬프트 보기
 12. JSON 파일 저장 및 불러오기
+
+### 주요 기능 실행 예시
+
+#### 1. 프롬프트 추가
+
+제목, 내용, 카테고리를 입력하여 새로운 프롬프트를 등록할 수 있다.
+
+<details>
+<summary>프롬프트 추가 화면 보기</summary>
+
+<br>
+
+![프롬프트 추가](docs/screenshots/04_프롬프트_추가.png)
+
+</details>
+
+#### 2. 프롬프트 목록
+
+저장된 모든 프롬프트를 번호, 카테고리, 제목과 함께 확인할 수 있다.
+
+<details>
+<summary>프롬프트 목록 화면 보기</summary>
+
+<br>
+
+![프롬프트 목록](docs/screenshots/05_프롬프트_목록.png)
+
+</details>
+
+#### 3. 프롬프트 검색
+
+제목 또는 내용에 포함된 검색어를 입력하여 관련 프롬프트를 찾을 수 있다.
+
+<details>
+<summary>프롬프트 검색 화면 보기</summary>
+
+<br>
+
+![프롬프트 검색](docs/screenshots/06_프롬프트_검색.png)
+
+</details>
+
 
 ## 프롬프트 데이터 구조
 
@@ -64,6 +118,17 @@ Python의 리스트와 딕셔너리, 조건문, 반복문, 함수, 파일 입출
 ```bash
 git clone https://github.com/bamiro00/python_prompt.git
 ```
+<details>
+<summary>Git clone 확인 화면 보기</summary>
+
+<br>
+
+GitHub 원격 저장소를 별도 폴더에 복제한 뒤 브랜치, 작업 상태와 최신 커밋을 확인한 화면입니다.
+
+![Git clone 확인](docs/screenshots/08_git_clone_확인.png)
+
+</details>
+
 
 ### 2. 프로젝트 폴더로 이동
 
@@ -76,6 +141,19 @@ cd python_prompt
 ```bash
 python prompt_manager.py
 ```
+
+<details>
+<summary>프로그램 메인 메뉴 화면 보기</summary>
+
+<br>
+
+프로그램을 실행하면 프롬프트 관리 기능을 번호로 선택할 수 있는 메인 메뉴가 표시됩니다.
+
+![프로그램 메인 메뉴](docs/screenshots/03_프로그램_메뉴.png)
+
+</details>
+
+
 ## 메뉴 화면
 
 프로그램을 실행하면 다음 메뉴가 표시됩니다.
@@ -161,6 +239,24 @@ feature/prompt-list
 
 브랜치를 생성하고 이동할 때 `git checkout`을 사용했으며, 기능 구현 후 `git merge`를 사용하여 `main` 브랜치에 병합했습니다.
 
+### Git 커밋 및 브랜치 그래프
+
+기능별 커밋 기록과 `feature/prompt-list` 브랜치를 생성한 뒤 `main` 브랜치에 병합한 이력을 확인할 수 있습니다.
+
+![Git 커밋 및 브랜치 그래프](docs/screenshots/02_git_log_graph.png)
+
+<details>
+<summary>Git pull 및 최종 상태 확인 화면 보기</summary>
+
+<br>
+
+원격 저장소의 최신 내용을 가져온 뒤 로컬 `main` 브랜치가 원격 저장소와 동일하고 작업 트리가 깨끗한 상태임을 확인한 화면입니다.
+
+![Git pull 확인](docs/screenshots/10_git_pull_확인.png)
+
+</details>
+
+
 ## 구현한 보너스 기능
 
 ### 보너스 1: 프롬프트 영속화 및 내보내기
@@ -176,6 +272,17 @@ feature/prompt-list
 - 상세 보기 조회수 기록
 - 조회수 기준 Top 프롬프트 목록
 
+<details>
+<summary>조회수 Top 프롬프트 실행 결과 보기</summary>
+
+<br>
+
+프롬프트 상세 보기 횟수를 기록하고 조회수가 높은 프롬프트를 내림차순으로 정렬한 결과입니다.
+
+![조회수 Top 프롬프트](docs/screenshots/07_보너스_조회수_Top.png)
+
+</details>
+
 ## 참고 사항
 
 - Python 3.10 이상에서 실행할 수 있습니다.
@@ -184,3 +291,21 @@ feature/prompt-list
 - 프로그램 실행 중 변경된 내용은 `prompts.json`에 저장됩니다.
 - 조회수는 프롬프트 상세 보기를 실행할 때마다 1회씩 증가합니다.
 - 조회수 Top 목록은 조회수가 높은 프롬프트부터 최대 3개까지 보여줍니다.
+
+---
+
+## GitHub 저장소 확인
+
+프로젝트 소스 코드, JSON 데이터, Markdown 내보내기 결과, README와 Git 커밋 기록을 GitHub 원격 저장소에서 확인할 수 있습니다.
+
+- 저장소: [bamiro00/python_prompt](https://github.com/bamiro00/python_prompt)
+
+
+<details>
+<summary>GitHub 저장소 화면 보기</summary>
+
+<br>
+
+![GitHub 저장소](docs/screenshots/09_GitHub_저장소.png)
+
+</details>
