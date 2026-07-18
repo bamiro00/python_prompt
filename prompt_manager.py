@@ -121,6 +121,7 @@ def add_prompt(prompt_list, categories):
 
     print("\n프롬프트가 추가되었습니다.")
     print(f"등록 번호: {new_prompt['id']}")
+
 def show_list(prompt_list):
     """저장된 모든 프롬프트를 번호와 함께 출력한다."""
     print("\n=== 프롬프트 목록 ===")
@@ -139,6 +140,8 @@ def show_list(prompt_list):
         )
 
     print(f"\n총 {len(prompt_list)}개의 프롬프트")
+
+
 def show_by_category(prompt_list, categories):
     """선택한 카테고리에 속한 프롬프트만 출력한다."""
     print("\n=== 카테고리별 조회 ===")
@@ -167,6 +170,7 @@ def show_by_category(prompt_list, categories):
 
     print(f"\n총 {len(filtered_prompts)}개의 프롬프트")
 
+
 def search_prompt(prompt_list):
     """제목 또는 내용에 검색어가 포함된 프롬프트를 출력한다."""
     print("\n=== 프롬프트 검색 ===")
@@ -194,6 +198,7 @@ def search_prompt(prompt_list):
             f"[{prompt['category']}] "
             f"{prompt['title']}{favorite_mark}"
         )
+
 def find_prompt_by_id(prompt_list, prompt_id):
     """입력한 번호와 일치하는 프롬프트를 반환한다."""
     for prompt in prompt_list:
@@ -230,6 +235,31 @@ def show_detail(prompt_list):
     print("내용:")
     print(selected_prompt["content"])
     print("-" * 40)
+
+def toggle_favorite(prompt_list):
+    """선택한 프롬프트의 즐겨찾기 상태를 추가하거나 해제한다."""
+    print("\n=== 즐겨찾기 관리 ===")
+
+    prompt_id_text = get_required_input("프롬프트 번호")
+
+    if not prompt_id_text.isdigit():
+        print("프롬프트 번호는 숫자로 입력해 주세요.")
+        return
+
+    prompt_id = int(prompt_id_text)
+    selected_prompt = find_prompt_by_id(prompt_list, prompt_id)
+
+    if selected_prompt is None:
+        print("해당 번호의 프롬프트가 없습니다.")
+        return
+
+    selected_prompt["favorite"] = not selected_prompt["favorite"]
+
+    if selected_prompt["favorite"]:
+        print(f"'{selected_prompt['title']}'을 즐겨찾기에 추가했습니다.")
+    else:
+        print(f"'{selected_prompt['title']}'을 즐겨찾기에서 해제했습니다.")
+
 def show_menu():
     """프로그램의 메인 메뉴를 출력한다."""
     print("\n=== 반려동물 추억 콘텐츠 프롬프트 관리 ===")
@@ -259,7 +289,9 @@ def main():
             search_prompt(prompts)
         elif choice == "5":
             show_detail(prompts)
-        elif choice in {"6", "7"}:
+        elif choice == "6":
+            toggle_favorite(prompts)
+        elif choice == "7":
             print("해당 기능은 다음 단계에서 구현합니다.")
         elif choice == "0":
             print("프로그램을 종료합니다.")
