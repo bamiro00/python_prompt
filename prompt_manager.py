@@ -501,6 +501,41 @@ def delete_prompt(prompt_list):
 
     print("프롬프트를 삭제했습니다.")
 
+def show_top_prompts(prompt_list):
+    """조회수가 높은 프롬프트를 최대 3개까지 출력한다."""
+    print("\n=== 조회수 Top 프롬프트 ===")
+
+    viewed_prompts = [
+        prompt
+        for prompt in prompt_list
+        if prompt.get("views", 0) > 0
+    ]
+
+    if not viewed_prompts:
+        print("아직 조회된 프롬프트가 없습니다.")
+        return
+
+    sorted_prompts = sorted(
+        viewed_prompts,
+        key=lambda prompt: (-prompt.get("views", 0), prompt["id"]),
+    )
+
+    top_prompts = sorted_prompts[:3]
+
+    for rank, prompt in enumerate(top_prompts, start=1):
+        favorite_mark = " ⭐" if prompt["favorite"] else ""
+
+        print(
+            f"{rank}위. "
+            f"[{prompt['category']}] "
+            f"{prompt['title']}{favorite_mark} "
+            f"- 조회수 {prompt.get('views', 0)}회"
+        )
+
+def wait_for_menu():
+    """출력 내용을 확인한 후 메뉴로 돌아가도록 기다린다."""
+    input("\n출력 내용을 확인한 뒤 Enter를 누르면 메뉴로 돌아갑니다.")
+
 def show_menu():
     """프로그램의 메인 메뉴를 출력한다."""
     print("\n=== 반려동물 추억 콘텐츠 프롬프트 관리 ===")
@@ -514,6 +549,7 @@ def show_menu():
     print("8. 카테고리별 Markdown 내보내기")
     print("9. 프롬프트 수정")
     print("10. 프롬프트 삭제")
+    print("11. 조회수 Top 프롬프트")
     print("0. 종료")
 
 
@@ -545,11 +581,15 @@ def main():
             update_prompt(prompts, CATEGORIES)
         elif choice == "10":
             delete_prompt(prompts)
+        elif choice == "11":
+            show_top_prompts(prompts)
         elif choice == "0":
             print("프로그램을 종료합니다.")
             break
         else:
             print("올바른 메뉴 번호를 입력해 주세요.")
+
+        wait_for_menu()
 
 
 if __name__ == "__main__":
