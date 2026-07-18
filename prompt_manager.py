@@ -166,6 +166,34 @@ def show_by_category(prompt_list, categories):
         )
 
     print(f"\n총 {len(filtered_prompts)}개의 프롬프트")
+
+def search_prompt(prompt_list):
+    """제목 또는 내용에 검색어가 포함된 프롬프트를 출력한다."""
+    print("\n=== 프롬프트 검색 ===")
+
+    keyword = get_required_input("검색어").lower()
+
+    search_results = [
+        prompt
+        for prompt in prompt_list
+        if keyword in prompt["title"].lower()
+        or keyword in prompt["content"].lower()
+    ]
+
+    if not search_results:
+        print("검색 결과가 없습니다.")
+        return
+
+    print(f"\n검색 결과: {len(search_results)}개")
+
+    for prompt in search_results:
+        favorite_mark = " ⭐" if prompt["favorite"] else ""
+
+        print(
+            f"{prompt['id']}. "
+            f"[{prompt['category']}] "
+            f"{prompt['title']}{favorite_mark}"
+        )
 def show_menu():
     """프로그램의 메인 메뉴를 출력한다."""
     print("\n=== 반려동물 추억 콘텐츠 프롬프트 관리 ===")
@@ -191,7 +219,9 @@ def main():
             show_list(prompts)
         elif choice == "3":
             show_by_category(prompts, CATEGORIES)
-        elif choice in {"4", "5", "6", "7"}:
+        elif choice == "4":
+            search_prompt(prompts)
+        elif choice in {"5", "6", "7"}:
             print("해당 기능은 다음 단계에서 구현합니다.")
         elif choice == "0":
             print("프로그램을 종료합니다.")
